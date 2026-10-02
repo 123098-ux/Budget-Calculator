@@ -1,0 +1,1352 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Budget Calculator - Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body {
+            background: #f5f8f7;
+            font-family: Arial, sans-serif;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: linear-gradient(
+                90deg,
+                #087f5b,
+                #20c997
+            );
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 23px;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .logout-btn {
+            border: 1px solid rgba(255,255,255,0.7);
+            color: white;
+            border-radius: 10px;
+            padding: 7px 16px;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #087f5b;
+        }
+
+        /* MAIN CONTAINER */
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 35px 20px;
+        }
+
+        .welcome-text h1 {
+            font-weight: 700;
+            color: #212529;
+        }
+
+        .welcome-text p {
+            color: #777;
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary-card {
+            border: none;
+            border-radius: 18px;
+            padding: 22px;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            height: 100%;
+        }
+
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .income-icon {
+            background: #d8f5e9;
+            color: #087f5b;
+        }
+
+        .expense-icon {
+            background: #ffe0e0;
+            color: #dc3545;
+        }
+
+        .balance-icon {
+            background: #dcecff;
+            color: #0d6efd;
+        }
+
+        .summary-card h6 {
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .summary-card h3 {
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* FORM CARDS */
+
+        .form-card {
+            background: white;
+            border: none;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .form-card h4 {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 10px;
+        }
+
+        .form-control:focus {
+            border-color: #20c997;
+            box-shadow: 0 0 0 0.2rem rgba(32,201,151,0.15);
+        }
+
+        .add-income-btn {
+            background: #087f5b;
+            color: white;
+            border: none;
+            height: 48px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .add-income-btn:hover {
+            background: #066b4d;
+            color: white;
+        }
+
+        .add-expense-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            height: 48px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .add-expense-btn:hover {
+            background: #bb2d3b;
+            color: white;
+        }
+
+        /* TABLE CARD */
+
+        .table-card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            height: 100%;
+        }
+
+        .table-card h4 {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .table thead th {
+            background: #f8f9fa;
+            color: #555;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 25px;
+        }
+
+        /* BUTTONS */
+
+        .edit-btn {
+            background: #fff3cd;
+            color: #856404;
+            border: none;
+            border-radius: 7px;
+            padding: 5px 9px;
+        }
+
+        .edit-btn:hover {
+            background: #ffc107;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f8d7da;
+            color: #842029;
+            border: none;
+            border-radius: 7px;
+            padding: 5px 9px;
+        }
+
+        .delete-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* BALANCE MESSAGE */
+
+        .balance-message {
+            border-radius: 15px;
+            padding: 18px;
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 25px;
+        }
+
+        .positive {
+            background: #d8f5e9;
+            color: #087f5b;
+        }
+
+        .negative {
+            background: #ffe0e0;
+            color: #b02a37;
+        }
+
+        .zero {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 768px) {
+
+            .dashboard-container {
+                padding: 25px 15px;
+            }
+
+            .welcome-text h1 {
+                font-size: 28px;
+            }
+
+            .table-card {
+                overflow-x: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-wallet2"></i>
+            Smart Budget
+        </a>
+
+        <button
+            id="logoutBtn"
+            class="btn logout-btn"
+        >
+            <i class="bi bi-box-arrow-right me-1"></i>
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<div class="dashboard-container">
+
+
+    <!-- WELCOME -->
+
+    <div class="welcome-text mb-4">
+
+        <h1>
+            Budget Dashboard
+        </h1>
+
+        <p>
+            Track your income and expenses and manage your money smarter.
+        </p>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- TOTAL INCOME -->
+
+        <div class="col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon income-icon">
+
+                    <i class="bi bi-arrow-down-circle"></i>
+
+                </div>
+
+                <h6>Total Income</h6>
+
+                <h3 id="totalIncome">
+                    ₹0
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL EXPENSE -->
+
+        <div class="col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon expense-icon">
+
+                    <i class="bi bi-arrow-up-circle"></i>
+
+                </div>
+
+                <h6>Total Expenses</h6>
+
+                <h3 id="totalExpense">
+                    ₹0
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <!-- BALANCE -->
+
+        <div class="col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon balance-icon">
+
+                    <i class="bi bi-wallet"></i>
+
+                </div>
+
+                <h6>Current Balance</h6>
+
+                <h3 id="balance">
+                    ₹0
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ADD FORMS -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- INCOME FORM -->
+
+        <div class="col-lg-6">
+
+            <div class="form-card">
+
+                <h4>
+                    <i class="bi bi-plus-circle text-success me-2"></i>
+                    Add Income
+                </h4>
+
+                <form id="incomeForm">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Description
+                            </label>
+
+                            <input
+                                type="text"
+                                id="incomeDescription"
+                                class="form-control"
+                                placeholder="e.g. Salary"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Amount (₹)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="incomeAmount"
+                                class="form-control"
+                                placeholder="e.g. 25000"
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn add-income-btn w-100 mt-3"
+                    >
+
+                        <i class="bi bi-plus-lg me-2"></i>
+
+                        Add Income
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- EXPENSE FORM -->
+
+        <div class="col-lg-6">
+
+            <div class="form-card">
+
+                <h4>
+                    <i class="bi bi-dash-circle text-danger me-2"></i>
+                    Add Expense
+                </h4>
+
+                <form id="expenseForm">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Description
+                            </label>
+
+                            <input
+                                type="text"
+                                id="expenseDescription"
+                                class="form-control"
+                                placeholder="e.g. Groceries"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Amount (₹)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="expenseAmount"
+                                class="form-control"
+                                placeholder="e.g. 3000"
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn add-expense-btn w-100 mt-3"
+                    >
+
+                        <i class="bi bi-plus-lg me-2"></i>
+
+                        Add Expense
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TABLES -->
+
+    <div class="row g-4">
+
+
+        <!-- INCOME TABLE -->
+
+        <div class="col-lg-6">
+
+            <div class="table-card">
+
+                <h4>
+
+                    <i class="bi bi-cash-stack text-success me-2"></i>
+
+                    Income
+
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Description
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="incomeTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- EXPENSE TABLE -->
+
+        <div class="col-lg-6">
+
+            <div class="table-card">
+
+                <h4>
+
+                    <i class="bi bi-receipt text-danger me-2"></i>
+
+                    Expenses
+
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Description
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="expenseTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BALANCE MESSAGE -->
+
+    <div
+        id="balanceMessage"
+        class="balance-message zero"
+    >
+
+        Add your income and expenses to see your balance.
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+// ==========================================
+// LOGIN PROTECTION
+// ==========================================
+
+const isLoggedIn =
+    localStorage.getItem("isLoggedIn");
+
+if (isLoggedIn !== "true") {
+
+    window.location.href = "index.html";
+
+}
+
+
+// ==========================================
+// GET USER
+// ==========================================
+
+const user =
+    JSON.parse(localStorage.getItem("user"));
+
+
+// ==========================================
+// STORAGE KEY
+// ==========================================
+
+const username =
+    user ? user.username : "user";
+
+const storageKey =
+    "budgetData_" + username;
+
+
+// ==========================================
+// LOAD DATA
+// ==========================================
+
+let budgetData =
+    JSON.parse(localStorage.getItem(storageKey)) || {
+
+        income: [],
+
+        expenses: []
+
+    };
+
+
+// ==========================================
+// ELEMENTS
+// ==========================================
+
+const incomeForm =
+    document.getElementById("incomeForm");
+
+const expenseForm =
+    document.getElementById("expenseForm");
+
+const incomeTable =
+    document.getElementById("incomeTable");
+
+const expenseTable =
+    document.getElementById("expenseTable");
+
+const totalIncome =
+    document.getElementById("totalIncome");
+
+const totalExpense =
+    document.getElementById("totalExpense");
+
+const balance =
+    document.getElementById("balance");
+
+const balanceMessage =
+    document.getElementById("balanceMessage");
+
+
+// ==========================================
+// SAVE DATA
+// ==========================================
+
+function saveData() {
+
+    localStorage.setItem(
+        storageKey,
+        JSON.stringify(budgetData)
+    );
+
+}
+
+
+// ==========================================
+// ADD INCOME
+// ==========================================
+
+incomeForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const description =
+            document.getElementById(
+                "incomeDescription"
+            ).value.trim();
+
+
+        const amount =
+            Number(
+                document.getElementById(
+                    "incomeAmount"
+                ).value
+            );
+
+
+        budgetData.income.push({
+
+            id: Date.now(),
+
+            description: description,
+
+            amount: amount
+
+        });
+
+
+        saveData();
+
+        incomeForm.reset();
+
+        displayData();
+
+    }
+);
+
+
+// ==========================================
+// ADD EXPENSE
+// ==========================================
+
+expenseForm.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const description =
+            document.getElementById(
+                "expenseDescription"
+            ).value.trim();
+
+
+        const amount =
+            Number(
+                document.getElementById(
+                    "expenseAmount"
+                ).value
+            );
+
+
+        budgetData.expenses.push({
+
+            id: Date.now(),
+
+            description: description,
+
+            amount: amount
+
+        });
+
+
+        saveData();
+
+        expenseForm.reset();
+
+        displayData();
+
+    }
+);
+
+
+// ==========================================
+// DISPLAY DATA
+// ==========================================
+
+function displayData() {
+
+
+    // -----------------------------
+    // INCOME TABLE
+    // -----------------------------
+
+    incomeTable.innerHTML = "";
+
+
+    if (budgetData.income.length === 0) {
+
+        incomeTable.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="3"
+                    class="empty-message"
+                >
+
+                    No income added yet.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    budgetData.income.forEach(function(item) {
+
+        incomeTable.innerHTML += `
+
+            <tr>
+
+                <td>
+                    ${item.description}
+                </td>
+
+                <td class="text-success fw-semibold">
+                    ₹${item.amount.toLocaleString("en-IN")}
+                </td>
+
+                <td>
+
+                    <button
+                        class="edit-btn me-1"
+                        onclick="editIncome(${item.id})"
+                    >
+
+                        <i class="bi bi-pencil"></i>
+
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteIncome(${item.id})"
+                    >
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    // -----------------------------
+    // EXPENSE TABLE
+    // -----------------------------
+
+    expenseTable.innerHTML = "";
+
+
+    if (budgetData.expenses.length === 0) {
+
+        expenseTable.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="3"
+                    class="empty-message"
+                >
+
+                    No expenses added yet.
+
+                </td>
+
+            </tr>
+
+        `;
+
+    }
+
+
+    budgetData.expenses.forEach(function(item) {
+
+        expenseTable.innerHTML += `
+
+            <tr>
+
+                <td>
+                    ${item.description}
+                </td>
+
+                <td class="text-danger fw-semibold">
+                    ₹${item.amount.toLocaleString("en-IN")}
+                </td>
+
+                <td>
+
+                    <button
+                        class="edit-btn me-1"
+                        onclick="editExpense(${item.id})"
+                    >
+
+                        <i class="bi bi-pencil"></i>
+
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteExpense(${item.id})"
+                    >
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    calculateBalance();
+
+}
+
+
+// ==========================================
+// EDIT INCOME
+// ==========================================
+
+function editIncome(id) {
+
+    const item =
+        budgetData.income.find(
+            function(income) {
+                return income.id === id;
+            }
+        );
+
+
+    if (!item) return;
+
+
+    const newDescription =
+        prompt(
+            "Enter new description:",
+            item.description
+        );
+
+
+    if (newDescription === null) return;
+
+
+    const newAmount =
+        prompt(
+            "Enter new amount:",
+            item.amount
+        );
+
+
+    if (newAmount === null) return;
+
+
+    if (
+        newDescription.trim() === "" ||
+        Number(newAmount) <= 0
+    ) {
+
+        alert("Please enter valid details.");
+
+        return;
+
+    }
+
+
+    item.description =
+        newDescription.trim();
+
+    item.amount =
+        Number(newAmount);
+
+
+    saveData();
+
+    displayData();
+
+}
+
+
+// ==========================================
+// EDIT EXPENSE
+// ==========================================
+
+function editExpense(id) {
+
+    const item =
+        budgetData.expenses.find(
+            function(expense) {
+                return expense.id === id;
+            }
+        );
+
+
+    if (!item) return;
+
+
+    const newDescription =
+        prompt(
+            "Enter new description:",
+            item.description
+        );
+
+
+    if (newDescription === null) return;
+
+
+    const newAmount =
+        prompt(
+            "Enter new amount:",
+            item.amount
+        );
+
+
+    if (newAmount === null) return;
+
+
+    if (
+        newDescription.trim() === "" ||
+        Number(newAmount) <= 0
+    ) {
+
+        alert("Please enter valid details.");
+
+        return;
+
+    }
+
+
+    item.description =
+        newDescription.trim();
+
+    item.amount =
+        Number(newAmount);
+
+
+    saveData();
+
+    displayData();
+
+}
+
+
+// ==========================================
+// DELETE INCOME
+// ==========================================
+
+function deleteIncome(id) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to remove this income?"
+        );
+
+
+    if (!confirmDelete) return;
+
+
+    budgetData.income =
+        budgetData.income.filter(
+            function(item) {
+                return item.id !== id;
+            }
+        );
+
+
+    saveData();
+
+    displayData();
+
+}
+
+
+// ==========================================
+// DELETE EXPENSE
+// ==========================================
+
+function deleteExpense(id) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to remove this expense?"
+        );
+
+
+    if (!confirmDelete) return;
+
+
+    budgetData.expenses =
+        budgetData.expenses.filter(
+            function(item) {
+                return item.id !== id;
+            }
+        );
+
+
+    saveData();
+
+    displayData();
+
+}
+
+
+// ==========================================
+// CALCULATE BALANCE
+// ==========================================
+
+function calculateBalance() {
+
+
+    const income =
+        budgetData.income.reduce(
+            function(total, item) {
+
+                return total + item.amount;
+
+            },
+            0
+        );
+
+
+    const expenses =
+        budgetData.expenses.reduce(
+            function(total, item) {
+
+                return total + item.amount;
+
+            },
+            0
+        );
+
+
+    const currentBalance =
+        income - expenses;
+
+
+    // Update cards
+
+    totalIncome.textContent =
+        "₹" + income.toLocaleString("en-IN");
+
+
+    totalExpense.textContent =
+        "₹" + expenses.toLocaleString("en-IN");
+
+
+    balance.textContent =
+        "₹" + currentBalance.toLocaleString("en-IN");
+
+
+    // Balance message
+
+    if (currentBalance > 0) {
+
+        balanceMessage.className =
+            "balance-message positive";
+
+        balanceMessage.innerHTML = `
+
+            <i class="bi bi-check-circle-fill me-2"></i>
+
+            You have saved
+            ₹${currentBalance.toLocaleString("en-IN")}.
+
+        `;
+
+    }
+
+    else if (currentBalance < 0) {
+
+        const overspent =
+            Math.abs(currentBalance);
+
+
+        balanceMessage.className =
+            "balance-message negative";
+
+        balanceMessage.innerHTML = `
+
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+
+            You have overspent by
+            ₹${overspent.toLocaleString("en-IN")}.
+
+        `;
+
+    }
+
+    else {
+
+        balanceMessage.className =
+            "balance-message zero";
+
+        balanceMessage.innerHTML = `
+
+            <i class="bi bi-info-circle-fill me-2"></i>
+
+            Your income and expenses are equal.
+
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        function() {
+
+            localStorage.removeItem("isLoggedIn");
+
+            window.location.href =
+                "index.html";
+
+        }
+    );
+
+
+// ==========================================
+// INITIAL DISPLAY
+// ==========================================
+
+displayData();
+
+
+</script>
+
+</body>
+
+</html>
+```
